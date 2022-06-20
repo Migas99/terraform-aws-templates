@@ -1,0 +1,48 @@
+name: Validate Terraform
+
+on:
+  push:
+    paths:
+      - "route53/**"
+      - "amazon-certificate-manager/**"
+      - "website/**"
+
+env:
+  ROUTE53_DIRECTORY: "./route53"
+  AMAZON_CERTIFICATE_MANAGER_DIRECTORY: "./amazon-certificate-manager"
+  WEBSITE_DIRECTORY: "./website"
+
+jobs:
+  validate:
+    name: Validate Terraform for all modules
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        working-directory: ${{ env.ROUTE53_DIRECTORY }}
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: ${{ env.ROUTE53_DIRECTORY }}
+        run: terraform validate
+
+      - name: Terraform Init
+        working-directory: ${{ env.AMAZON_CERTIFICATE_MANAGER_DIRECTORY }}
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: ${{ env.AMAZON_CERTIFICATE_MANAGER_DIRECTORY }}
+        run: terraform validate
+
+      - name: Terraform Init
+        working-directory: ${{ env.WEBSITE_DIRECTORY }}
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: ${{ env.WEBSITE_DIRECTORY }}
+        run: terraform validate
